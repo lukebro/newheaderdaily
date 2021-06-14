@@ -1,0 +1,58 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model header {
+    userId       Int      @id
+    name         String?
+    profileImage String?
+    profileLink  String?
+    original     String?
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+    user         user     @relation(fields: [userId], references: [id])
+}
+
+model schedule {
+    userId    Int               @id
+    frequency scheduleFrequency @default(daily)
+    status    scheduleStatus    @default(scheduled)
+    changeOn  DateTime
+    active    Boolean           @default(true)
+    createdAt DateTime          @default(now())
+    updatedAt DateTime          @updatedAt
+    user      user              @relation(fields: [userId], references: [id])
+}
+
+model user {
+    id            Int       @id @default(autoincrement())
+    twitterId     String    @unique
+    username      String
+    name          String?
+    avatar        String?
+    token         String?
+    tokenSecret   String?
+    utcOffset     Int       @default(0)
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @updatedAt
+    header        header?
+    schedule      schedule?
+}
+
+enum scheduleFrequency {
+    hourly
+    daily
+    weekly
+    monthly
+    yearly
+}
+
+enum scheduleStatus {
+    scheduled
+    processing
+}

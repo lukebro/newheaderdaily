@@ -1,0 +1,20 @@
+{
+    "apps": [
+        {
+            "name": "newheaderdaily",
+            "script": "npm",
+            "args": "start -- -p 3010",
+            "env": {
+                "NODE_ENV": "production"
+            }
+        },
+        {
+            "name": "newheaderdaily-worker",
+            "script": "npm",
+            "args": "run start-worker",
+            "env": {
+                "NODE_ENV": "production"
+            }
+        }
+    ]
+}
