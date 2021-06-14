@@ -10,6 +10,7 @@ schedule.scheduleJob('*/10 * * * * *', async () => {
     try {
         await processSchedule();
     } catch (e) {
+        console.error(e);
         Sentry.captureException(e);
     }
 });

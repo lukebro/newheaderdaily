@@ -9,6 +9,8 @@ import {
     error
 } from '../src/lib/error';
 
+const PARSE_MSG = 'invalid json response body at https://api.twitter.com/1.1/account/update_profile_banner.json reason: Unexpected end of JSON input';
+
 export default async function updateHeader(user) {
     const { id: userId, token, tokenSecret } = user;
 
@@ -55,6 +57,15 @@ export default async function updateHeader(user) {
             if (first.code === 64) {
                 throw error(SUSPENDED_ACCOUNT); 
             }
+        }
+        
+        // @TODO(lukebro): twitter-lite just doesn't handle
+        // whatever response when app permissions are revoked
+        // and an update_profile_banner request is made...
+        // for now... we'll just pretend all fetch errors (error parsing json)
+        // will be when token is disabled.
+        if (e.name === 'FetchError' && e.type === 'invalid-json' && e.message === PARSE_MSG) {
+            throw error(DISABLED_TOKEN);
         }
 
         console.error(
