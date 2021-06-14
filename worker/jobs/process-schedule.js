@@ -3,7 +3,12 @@ import updateHeader from '../updateHeader.js';
 import { addMinutes } from 'date-fns';
 import Sentry from '../../src/lib/sentry.js';
 import { timeAt3am } from '../../src/lib/time.js';
-import { RATE_LIMIT, DISABLED_TOKEN, IMAGE_ERROR } from '../../src/lib/error.js';
+import {
+    SUSPENDED_ACCOUNT,
+    RATE_LIMIT,
+    DISABLED_TOKEN,
+    IMAGE_ERROR
+} from '../../src/lib/error.js';
 
 export default async () => {
     const jobs = await prisma.schedule.findMany({
@@ -49,11 +54,10 @@ export default async () => {
         try {
             await updateHeader(job.user);
         } catch (e) {
-
             // if we hit rate limit, we try again at next reset
             if (e.code === RATE_LIMIT) {
                 changeOn = e.nextReset;
-            } else if (e.code === DISABLED_TOKEN) {
+            } else if (e.code === DISABLED_TOKEN || e.code === SUSPENDED_ACCOUNT) {
                 active = false;
             } else if (e.code === IMAGE_ERROR) {
                 // if unsplash is down try again in 30

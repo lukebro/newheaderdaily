@@ -5,6 +5,7 @@ import {
     RATE_LIMIT,
     DISABLED_TOKEN,
     IMAGE_ERROR,
+    SUSPENDED_ACCOUNT,
     error
 } from '../src/lib/error';
 
@@ -48,9 +49,11 @@ export default async function updateHeader(user) {
             }
 
             if (first.code === 89) {
-                console.log('Disabled token.');
-
                 throw error(DISABLED_TOKEN);
+            }
+
+            if (first.code === 64) {
+                throw error(SUSPENDED_ACCOUNT); 
             }
         }
 
