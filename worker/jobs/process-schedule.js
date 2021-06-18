@@ -49,9 +49,6 @@ export default async () => {
         Sentry.captureMessage('Well.. the updated count and the jobs length count did not match up.');
     }
 
-    console.log(`Starting ${jobs.length} jobs.`);
-    console.log(JSON.stringify(updated, null, 4));
-
     const transaction = Sentry.startTransaction({
         op: 'worker',
         name: 'scheduleAllHeaders'
@@ -113,5 +110,5 @@ export default async () => {
 
     transaction.finish();
 
-    console.log(`Completed ${completed}/${jobs.length} jobs.`);
+    Sentry.captureMessage(`Completed ${completed}/${jobs.length} jobs.`);
 };
