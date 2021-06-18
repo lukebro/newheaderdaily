@@ -25,7 +25,8 @@ export default async () => {
         }
     });
 
-    if (!jobs || jobs.length === 0) {
+    if (jobs.length === 0) {
+        console.log("No jobs to process.");
         return;
     }
 

@@ -9,7 +9,7 @@ let processing = false;
 /**
  * Every 10 seconds we'll run this job unless busy.
  */
-schedule.scheduleJob('*/10 * * * * *', async () => {
+schedule.scheduleJob('*/60 * * * *', async () => {
     if (processing) {
         // skip scheduling another task when one is running
         return;
