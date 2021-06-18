@@ -1,7 +1,7 @@
 {
     "apps": [
         {
-            "name": "newheaderdaily",
+            "name": "nhd",
             "script": "npm",
             "args": "start -- -p 3010",
             "env": {
@@ -9,7 +9,7 @@
             }
         },
         {
-            "name": "newheaderdaily-worker",
+            "name": "nhd-worker",
             "script": "npm",
             "args": "run start-worker",
             "env": {
