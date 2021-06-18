@@ -17,6 +17,7 @@ schedule.scheduleJob('* * * * *', async () => {
 
     try {
         processing = true;
+        console.log('Starting job.');
         await processSchedule();
     } catch (e) {
         console.error(e);
