@@ -11,12 +11,13 @@ import {
 } from '../../src/lib/error.js';
 
 export default async () => {
+    const now = new Date();
     const jobs = await prisma.schedule.findMany({
         where: {
             active: true,
             status: 'scheduled',
             changeOn: {
-                lte: new Date()
+                lte: now
             }
         },
         include: {
@@ -28,7 +29,28 @@ export default async () => {
         return;
     }
 
+    const updated = await prisma.schedule.updateMany({
+        data: {
+            status: 'processing'
+        },
+        where: {
+            active: true,
+            status: 'scheduled',
+            changeOn: {
+                lte: now
+            }
+        }
+    });
+
+    if (updated.count !== jobs.length) {
+
+        // This maybe can happen? Very tough race condition but
+        // in a world where the findMany tasks is slower than 10s (job cycle).
+        Sentry.captureMessage('Well.. the updated count and the jobs length count did not match up.');
+    }
+
     console.log(`Starting ${jobs.length} jobs.`);
+    console.log(JSON.stringify(updated, null, 4));
 
     const transaction = Sentry.startTransaction({
         op: 'worker',
@@ -43,15 +65,6 @@ export default async () => {
         const transaction = Sentry.startTransaction({
             op: 'worker',
             name: 'processHeader'
-        });
-
-        await prisma.schedule.update({
-            where: {
-                userId: job.userId
-            },
-            data: {
-                status: 'processing'
-            }
         });
 
         let changeOn = timeAt3am(job.user.utcOffset);
