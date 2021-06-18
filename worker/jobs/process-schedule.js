@@ -28,12 +28,18 @@ export default async () => {
         return;
     }
 
+    console.log(`Starting ${jobs.length} jobs.`);
+
     const transaction = Sentry.startTransaction({
         op: 'worker',
         name: 'scheduleAllHeaders'
     });
 
-    const queue = jobs.map(async (job) => {
+    let completed = 0;
+
+    const queue = jobs.reduce(async (previous, job) => {
+        await previous;
+
         const transaction = Sentry.startTransaction({
             op: 'worker',
             name: 'processHeader'
@@ -50,6 +56,7 @@ export default async () => {
 
         let changeOn = timeAt3am(job.user.utcOffset);
         let active = undefined;
+        let failed = false;
 
         try {
             await updateHeader(job.user);
@@ -69,6 +76,7 @@ export default async () => {
 
             console.error(e);
             Sentry.captureException(e);
+            failed = true;
         }
 
         await prisma.schedule.update({
@@ -83,9 +91,14 @@ export default async () => {
         });
 
         transaction.finish();
-    });
 
-    await Promise.all(queue);
+        if (!failed) completed += 1;
+    }, Promise.resolve());
+
+    // wait for the queue chain to finish
+    await queue;
 
     transaction.finish();
+
+    console.log(`Completed ${completed}/${jobs.length} jobs.`);
 };
