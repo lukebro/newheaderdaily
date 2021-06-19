@@ -7,7 +7,7 @@ import {
     SUSPENDED_ACCOUNT,
     RATE_LIMIT,
     DISABLED_TOKEN,
-    IMAGE_ERROR
+    IMAGE_ERROR,
 } from '../../src/lib/error.js';
 
 export default async () => {
@@ -17,44 +17,45 @@ export default async () => {
             active: true,
             status: 'scheduled',
             changeOn: {
-                lte: now
-            }
+                lte: now,
+            },
         },
         include: {
-            user: true
-        }
+            user: true,
+        },
     });
 
     console.log('Jobs found: ', jobs.length);
 
     if (jobs.length === 0) {
-        console.log("No jobs to process.");
+        console.log('No jobs to process.');
         return;
     }
 
     const updated = await prisma.schedule.updateMany({
         data: {
-            status: 'processing'
+            status: 'processing',
         },
         where: {
             active: true,
             status: 'scheduled',
             changeOn: {
-                lte: now
-            }
-        }
+                lte: now,
+            },
+        },
     });
 
     if (updated.count !== jobs.length) {
-
         // This maybe can happen? Very tough race condition but
         // in a world where the findMany tasks is slower than 10s (job cycle).
-        Sentry.captureMessage('Well.. the updated count and the jobs length count did not match up.');
+        Sentry.captureMessage(
+            'Well.. the updated count and the jobs length count did not match up.'
+        );
     }
 
     const transaction = Sentry.startTransaction({
         op: 'worker',
-        name: 'scheduleAllHeaders'
+        name: 'scheduleAllHeaders',
     });
 
     let completed = 0;
@@ -64,7 +65,7 @@ export default async () => {
 
         const transaction = Sentry.startTransaction({
             op: 'worker',
-            name: 'processHeader'
+            name: 'processHeader',
         });
 
         let changeOn = timeAt3am(job.user.utcOffset);
@@ -77,7 +78,10 @@ export default async () => {
             // if we hit rate limit, we try again at next reset
             if (e.code === RATE_LIMIT) {
                 changeOn = e.nextReset;
-            } else if (e.code === DISABLED_TOKEN || e.code === SUSPENDED_ACCOUNT) {
+            } else if (
+                e.code === DISABLED_TOKEN ||
+                e.code === SUSPENDED_ACCOUNT
+            ) {
                 active = false;
             } else if (e.code === IMAGE_ERROR) {
                 // if unsplash is down try again in 30
@@ -87,6 +91,8 @@ export default async () => {
                 changeOn = addMinutes(new Date(), 15);
             }
 
+            console.log(JSON.stringify({ changeOn, active }, null, 4));
+
             console.error(e);
             Sentry.captureException(e);
             failed = true;
@@ -94,13 +100,13 @@ export default async () => {
 
         await prisma.schedule.update({
             where: {
-                userId: job.userId
+                userId: job.userId,
             },
             data: {
                 status: 'scheduled',
                 changeOn,
-                active
-            }
+                active,
+            },
         });
 
         transaction.finish();
