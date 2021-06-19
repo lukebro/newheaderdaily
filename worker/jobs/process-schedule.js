@@ -105,15 +105,23 @@ export default async () => {
             failed = true;
         }
 
+        const data = {
+            status: 'scheduled',
+            changeOn,
+            active
+        };
+
+        if (!failed) {
+            data.count = {
+                increment: 1
+            };
+        }
+
         await prisma.schedule.update({
             where: {
                 userId: job.userId,
             },
-            data: {
-                status: 'scheduled',
-                changeOn,
-                active,
-            },
+            data
         });
 
         if (!failed) completed += 1;

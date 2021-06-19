@@ -8,7 +8,6 @@ Sentry.init({
     release: `${name}@${version}`,
     dsn: process.env.SENTRY_DSN,
     tracesSampleRate: 1.0,
-    integrations: [new Tracing.Integrations.MySQL()],
     environment: isProd ? 'prod' : 'dev',
     debug: !isProd
 });

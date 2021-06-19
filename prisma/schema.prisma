@@ -26,6 +26,7 @@ model schedule {
     active    Boolean           @default(true)
     createdAt DateTime          @default(now())
     updatedAt DateTime          @updatedAt
+    count     Int               @default(0)
     user      user              @relation(fields: [userId], references: [id])
 }
 
