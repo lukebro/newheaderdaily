@@ -27,6 +27,7 @@ jobs:
         uses: applboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
           key: ${{ secrest.KEY }}
           port: ${{ secrets.PORT }}
           script: |
