@@ -25,12 +25,13 @@ export default async () => {
         },
     });
 
-    console.log('Jobs found: ', jobs.length);
 
     if (jobs.length === 0) {
         console.log('No jobs to process.');
         return;
     }
+
+    console.log('Jobs found: ', jobs.length);
 
     const updated = await prisma.schedule.updateMany({
         data: {
@@ -53,11 +54,6 @@ export default async () => {
         );
     }
 
-    const transaction = Sentry.startTransaction({
-        op: 'worker',
-        name: 'scheduleAllHeaders',
-    });
-
     let completed = 0;
 
     const queue = jobs.reduce(async (previous, job) => {
@@ -66,6 +62,17 @@ export default async () => {
         const transaction = Sentry.startTransaction({
             op: 'worker',
             name: 'processHeader',
+        });
+
+        Sentry.setUser({
+            id: job.userId,
+            username: job.user.username,
+            twitterId: job.user.twitterId,
+            name: job.user.name,
+        });
+        Sentry.setContext({
+            utcOffset: job.user.utcOffset,
+            changeOn: job.changeOn
         });
 
         let changeOn = timeAt3am(job.user.utcOffset);
@@ -109,15 +116,13 @@ export default async () => {
             },
         });
 
-        transaction.finish();
-
         if (!failed) completed += 1;
+
+        transaction.finish();
     }, Promise.resolve());
 
     // wait for the queue chain to finish
     await queue;
 
-    transaction.finish();
-
-    Sentry.captureMessage(`Completed ${completed}/${jobs.length} jobs.`);
+    console.log(`Completed ${completed}/${jobs.length} jobs.`);
 };
