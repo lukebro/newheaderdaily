@@ -1,8 +1,8 @@
 import prisma from '../../src/lib/prisma.js';
 import updateHeader from '../updateHeader.js';
-import { addMinutes } from 'date-fns';
+import { addMinutes, isFuture } from 'date-fns';
 import Sentry from '../../src/lib/sentry.js';
-import { format, timeAt3am, isFuture } from '../../src/lib/time.js';
+import { format, timeAt3am } from '../../src/lib/time.js';
 import {
     SUSPENDED_ACCOUNT,
     RATE_LIMIT,
