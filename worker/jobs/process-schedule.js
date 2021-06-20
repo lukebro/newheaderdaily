@@ -2,7 +2,7 @@ import prisma from '../../src/lib/prisma.js';
 import updateHeader from '../updateHeader.js';
 import { addMinutes } from 'date-fns';
 import Sentry from '../../src/lib/sentry.js';
-import { format, timeAt3am } from '../../src/lib/time.js';
+import { format, timeAt3am, isFuture } from '../../src/lib/time.js';
 import {
     SUSPENDED_ACCOUNT,
     RATE_LIMIT,
@@ -108,6 +108,11 @@ export default async () => {
             failed = true;
         }
 
+        if (!isFuture(changeOn)) {
+            Sentry.captureMessage(`Change on was not in the future: ${job.user.utcOffset} of user ${job.userId}`);
+            changeOn = timeAt3am(0);
+        }
+
         const data = {
             status: 'scheduled',
             changeOn,
@@ -115,7 +120,7 @@ export default async () => {
         };
 
         if (!failed) {
-            console.log(`Changing next header on ${format(changeOn)}.`);
+            console.log(`Changing next header on ${format(changeOn)} for user ${job.userId}.`);
 
             data.count = {
                 increment: 1
