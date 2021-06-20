@@ -2,7 +2,7 @@ import prisma from '../../src/lib/prisma.js';
 import updateHeader from '../updateHeader.js';
 import { addMinutes } from 'date-fns';
 import Sentry from '../../src/lib/sentry.js';
-import { timeAt3am } from '../../src/lib/time.js';
+import { format, timeAt3am } from '../../src/lib/time.js';
 import {
     SUSPENDED_ACCOUNT,
     RATE_LIMIT,
@@ -12,6 +12,9 @@ import {
 
 export default async () => {
     const now = new Date();
+
+    console.log(`Current time is ${format(now)}.`);
+
     const jobs = await prisma.schedule.findMany({
         where: {
             active: true,
@@ -84,7 +87,7 @@ export default async () => {
         } catch (e) {
             // if we hit rate limit, we try again at next reset
             if (e.code === RATE_LIMIT) {
-                changeOn = e.nextReset;
+                changeOn = addMinutes(new Date(e.nextReset), 5);
             } else if (
                 e.code === DISABLED_TOKEN ||
                 e.code === SUSPENDED_ACCOUNT
@@ -112,6 +115,8 @@ export default async () => {
         };
 
         if (!failed) {
+            console.log(`Changing next header on ${format(changeOn)}.`);
+
             data.count = {
                 increment: 1
             };
