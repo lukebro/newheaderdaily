@@ -1,10 +1,10 @@
 -- CreateTable
-CREATE TABLE `header` (
+CREATE TABLE `Header` (
     `userId` INTEGER NOT NULL,
-    `name` VARCHAR(191),
-    `profileImage` VARCHAR(191),
-    `profileLink` VARCHAR(191),
-    `original` VARCHAR(191),
+    `name` VARCHAR(191) NULL,
+    `profileImage` VARCHAR(191) NULL,
+    `profileLink` VARCHAR(191) NULL,
+    `original` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -12,7 +12,7 @@ CREATE TABLE `header` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `schedule` (
+CREATE TABLE `Schedule` (
     `userId` INTEGER NOT NULL,
     `frequency` ENUM('hourly', 'daily', 'weekly', 'monthly', 'yearly') NOT NULL DEFAULT 'daily',
     `status` ENUM('scheduled', 'processing') NOT NULL DEFAULT 'scheduled',
@@ -20,29 +20,30 @@ CREATE TABLE `schedule` (
     `active` BOOLEAN NOT NULL DEFAULT true,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `count` INTEGER NOT NULL DEFAULT 0,
 
     PRIMARY KEY (`userId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `user` (
+CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `twitterId` VARCHAR(191) NOT NULL,
     `username` VARCHAR(191) NOT NULL,
-    `name` VARCHAR(191),
-    `avatar` VARCHAR(191),
-    `token` VARCHAR(191),
-    `tokenSecret` VARCHAR(191),
+    `name` VARCHAR(191) NULL,
+    `avatar` VARCHAR(191) NULL,
+    `token` VARCHAR(191) NULL,
+    `tokenSecret` VARCHAR(191) NULL,
     `utcOffset` INTEGER NOT NULL DEFAULT 0,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
-    UNIQUE INDEX `user.twitterId_unique`(`twitterId`),
+    UNIQUE INDEX `User_twitterId_key`(`twitterId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `header` ADD FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Header` ADD CONSTRAINT `Header_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `schedule` ADD FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Schedule` ADD CONSTRAINT `Schedule_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -1,18 +1,19 @@
 import { useEffect } from 'react';
 import Router from 'next/router';
 import useSWR from 'swr';
-import type { User } from 'src/types';
-
+import type { User } from 'types';
 
 class FetchError extends Error {
-  public status?: number
+    public status?: number;
 }
 
 export const fetcher = async (url: string) => {
     const res = await fetch(url);
 
     if (!res.ok) {
-        const error = new FetchError('An error occurred while fetching the data.');
+        const error = new FetchError(
+            'An error occurred while fetching the data.',
+        );
         error.status = res.status;
 
         throw error;
@@ -24,16 +25,20 @@ export const fetcher = async (url: string) => {
 export function useUser({
     redirectTo,
     redirectIfFound,
+    fallbackData,
 }: {
     redirectTo?: string;
     redirectIfFound?: boolean;
+    fallbackData?: User;
 } = {}) {
-    const { data, error, mutate } = useSWR<User>('/api/user');
-    const loading = !data && !error;
-    const loggedOut: boolean = error && error.status === 401;
+    const { data, error, mutate } = useSWR<User>('/api/user', fetcher, {
+        fallbackData,
+    });
+
+    const loggedOut = !data;
 
     useEffect(() => {
-        if (!redirectTo || loading) return;
+        if (!redirectTo) return;
         if (
             // If redirectTo is set, redirect if the user was not found.
             (redirectTo && !redirectIfFound && loggedOut) ||
@@ -42,7 +47,7 @@ export function useUser({
         ) {
             Router.push(redirectTo);
         }
-    }, [redirectTo, redirectIfFound, loading, loggedOut]);
+    }, [redirectTo, redirectIfFound, loggedOut]);
 
-    return { user: data, loggedOut, loading, mutate };
+    return { user: data, loggedOut, mutate };
 }

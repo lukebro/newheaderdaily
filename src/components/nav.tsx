@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import Anchor from 'components/anchor';
 import TwitterLogin from 'components/twitter-login';
-import type { User } from 'src/types';
+import type { User } from 'types';
 import { useUser } from 'lib/hooks';
 
 function Nav(): JSX.Element {
-    const { user, loading } = useUser();
+    const { user } = useUser();
 
     return (
         <header className="fixed bg-white top-0 inset-x-0 w-full py-5">
@@ -18,15 +18,13 @@ function Nav(): JSX.Element {
                         </a>
                     </Link>
                 </div>
-                {!loading && (
-                    <div>
-                        {user ? (
-                            <UserBar user={user} />
-                        ) : (
-                            <TwitterLogin href="/login" />
-                        )}
-                    </div>
-                )}
+                <div>
+                    {user ? (
+                        <UserBar user={user} />
+                    ) : (
+                        <TwitterLogin href="/login" />
+                    )}
+                </div>
             </div>
         </header>
     );

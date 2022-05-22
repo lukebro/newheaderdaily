@@ -1,7 +1,6 @@
 import passport from 'passport';
 import { Strategy as TwitterStrategy } from 'passport-twitter';
 import prisma from 'lib/prisma';
-import { startOfDay, addHours } from 'date-fns';
 import Twitter from 'lib/twitter';
 
 const { TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, HOST_URL } = process.env;
@@ -48,7 +47,7 @@ passport.use(
 
             const twitter = new Twitter(token, tokenSecret);
 
-            let utcOffset = 0; 
+            let utcOffset = 0;
             try {
                 const settings = await twitter.get('account/settings');
                 utcOffset = settings?.time_zone?.utc_offset || 0;

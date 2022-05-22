@@ -2,14 +2,14 @@ import { useUser } from 'lib/hooks';
 import useSWR from 'swr';
 import Anchor from 'components/anchor';
 import ChangeSetting from 'components/change-setting';
-import { Header, Schedule } from 'src/types';
+import { Header, Schedule } from 'types';
 
 export default function Dashboard() {
-    const { user, loading } = useUser();
+    const { user } = useUser();
     const { data: schedule, error } = useSWR<Schedule>('/api/schedule');
     const { data: header } = useSWR<Header>('/api/header');
 
-    if (!schedule || loading || !user) {
+    if (!schedule || !user) {
         return null;
     }
 

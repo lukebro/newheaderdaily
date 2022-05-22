@@ -1,6 +1,6 @@
 import Twitter from 'twitter-lite';
 
-export default function (token, tokenSecret) {
+export default function twitter(token, tokenSecret) {
     return new Twitter({
         consumer_key: process.env.TWITTER_CONSUMER_KEY,
         consumer_secret: process.env.TWITTER_CONSUMER_SECRET,

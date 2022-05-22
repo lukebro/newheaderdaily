@@ -1,6 +1,5 @@
 export type Schedule = {
     frequency: string;
-    changeOn: string;
     status: string;
     active: boolean;
     timeTillChange: {
@@ -13,7 +12,6 @@ export type User = {
     username: string;
     name: string;
     avatar: string;
-    utcOffset: number;
 };
 
 export type Header = {

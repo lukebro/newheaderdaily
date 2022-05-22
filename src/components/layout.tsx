@@ -1,9 +1,11 @@
 import Head from 'next/head';
 import Nav from './nav';
 import Footer from './footer';
+import type { User } from 'types';
 
 type LayoutProps = {
     title?: string;
+    user?: User;
     children: JSX.Element | JSX.Element[];
 };
 

@@ -1,59 +1,59 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
-model header {
-    userId       Int      @id
-    name         String?
-    profileImage String?
-    profileLink  String?
-    original     String?
-    createdAt    DateTime @default(now())
-    updatedAt    DateTime @updatedAt
-    user         user     @relation(fields: [userId], references: [id])
+model Header {
+  userId       Int      @id
+  name         String?
+  profileImage String?
+  profileLink  String?
+  original     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
 }
 
-model schedule {
-    userId    Int               @id
-    frequency scheduleFrequency @default(daily)
-    status    scheduleStatus    @default(scheduled)
-    changeOn  DateTime
-    active    Boolean           @default(true)
-    createdAt DateTime          @default(now())
-    updatedAt DateTime          @updatedAt
-    count     Int               @default(0)
-    user      user              @relation(fields: [userId], references: [id])
+model Schedule {
+  userId    Int               @id
+  frequency ScheduleFrequency @default(daily)
+  status    ScheduleStatus    @default(scheduled)
+  changeOn  DateTime
+  active    Boolean           @default(true)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  count     Int               @default(0)
+  user      User              @relation(fields: [userId], references: [id])
 }
 
-model user {
-    id            Int       @id @default(autoincrement())
-    twitterId     String    @unique
-    username      String
-    name          String?
-    avatar        String?
-    token         String?
-    tokenSecret   String?
-    utcOffset     Int       @default(0)
-    createdAt     DateTime  @default(now())
-    updatedAt     DateTime  @updatedAt
-    header        header?
-    schedule      schedule?
+model User {
+  id          Int       @id @default(autoincrement())
+  twitterId   String    @unique
+  username    String
+  name        String?
+  avatar      String?
+  token       String?
+  tokenSecret String?
+  utcOffset   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  header      Header?
+  schedule    Schedule?
 }
 
-enum scheduleFrequency {
-    hourly
-    daily
-    weekly
-    monthly
-    yearly
+enum ScheduleFrequency {
+  hourly
+  daily
+  weekly
+  monthly
+  yearly
 }
 
-enum scheduleStatus {
-    scheduled
-    processing
+enum ScheduleStatus {
+  scheduled
+  processing
 }

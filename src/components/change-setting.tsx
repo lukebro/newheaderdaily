@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import { requestUpdateSchedule } from 'lib/requests';
-import type { Schedule } from 'src/types';
+import type { Schedule } from 'types';
 
 const contents = {
     active: {
