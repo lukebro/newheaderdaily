@@ -11,7 +11,7 @@
         {
             "name": "nhd-worker",
             "script": "npm",
-            "args": "run start-worker",
+            "args": "run worker",
             "env": {
                 "NODE_ENV": "production"
             }
