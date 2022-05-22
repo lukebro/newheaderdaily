@@ -5,8 +5,6 @@ import { useUser } from 'lib/hooks';
 function Index() {
     const { loading, loggedOut } = useUser();
 
-    console.log(loading, loggedOut);
-
     return <Layout>{loggedOut ? <HomePage /> : <Dashboard />}</Layout>;
 }
 
