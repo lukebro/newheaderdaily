@@ -72,7 +72,7 @@ function CurrentHeader({ header }: { header: Header }) {
 function Disabled() {
     return (
         <section className="prose prose-stone">
-            <h1>I'm turned off.</h1>
+            <h1>I&apos;m turned off.</h1>
 
             <ChangeSetting />
 
