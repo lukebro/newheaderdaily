@@ -7,8 +7,8 @@ handler
     .use(session)
     .get(
         (req, res) => {
-            req.logout();
-            res.redirect('/');
+            req.logout(() => {
+            });
         }
     );
 

@@ -3,11 +3,19 @@ import Router from 'next/router';
 import useSWR from 'swr';
 import type { User } from 'src/types';
 
+
+class FetchError extends Error {
+  public status?: number
+}
+
 export const fetcher = async (url: string) => {
     const res = await fetch(url);
 
     if (!res.ok) {
-        throw new Error('An error occurred while fetching the data.');
+        const error = new FetchError('An error occurred while fetching the data.');
+        error.status = res.status;
+
+        throw error;
     }
 
     return res.json();
