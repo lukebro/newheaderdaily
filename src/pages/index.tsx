@@ -52,15 +52,15 @@ function HomePage() {
 
             <p>
                 Everyday your <a href="https://twitter.com">Twitter</a> header
-                photo will be changed to a random one from{' '}
+                photo will be changed to a curated one from{' '}
                 <a href="https://unsplash.com">Unsplash</a>.
             </p>
             <h3>how does it work?</h3>
             <p>
-                Every morning a bot will randomly select a curated picture from
-                Unsplash and upload it as your Twitter profile banner making all
-                your friends think you work really hard to keep your banner
-                fresh & unique.
+                Every morning we&apos;ll randomly select a curated photo from
+                Unsplash and upload it as your Twitter profile banner. All your
+                followers will think you work really hard to keep your banner
+                fresh &amp; unique.
             </p>
             <h3>how do i turn it off?</h3>
             <p>
@@ -69,7 +69,8 @@ function HomePage() {
                 <a href="https://twitter.com/settings/connected_apps">
                     settings page
                 </a>
-                , or you can sign in and hit the big red &quot;stop&quot; button.
+                , or you can sign in and hit the big red &quot;stop&quot;
+                button.
             </p>
         </article>
     );
