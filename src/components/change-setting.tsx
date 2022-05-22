@@ -5,16 +5,16 @@ import type { Schedule } from 'types';
 const contents = {
     active: {
         style: 'bg-red-500',
-        text: 'Click me to disable changing your header',
+        text: 'Click me to disable changing your header.',
     },
     disabled: {
         style: 'bg-green-500',
-        text: 'Click me to enable changing your header',
+        text: 'Click me to enable changing your header.',
     },
 };
 
 const styles =
-    'mb-5 text-white p-3 rounded-sm font-sans text-sm hover:transform hover:scale-105 transition-transform';
+    'text-white p-3 rounded-sm hover:transform hover:scale-105 transition-transform drop-shadow-md hover:drop-shadow-lg ';
 
 function ChangeSetting(): JSX.Element | null {
     const { data, error, mutate } = useSWR<Schedule>('/api/schedule');

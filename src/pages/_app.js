@@ -1,7 +1,6 @@
 import { SWRConfig } from 'swr';
 import { config as fontAwesomeConfig } from '@fortawesome/fontawesome-svg-core';
 import { fetcher } from 'lib/hooks';
-import 'tailwindcss/tailwind.css';
 import '../global.css';
 
 fontAwesomeConfig.autoAddCss = false;

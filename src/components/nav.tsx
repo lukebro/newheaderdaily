@@ -8,23 +8,24 @@ function Nav(): JSX.Element {
     const { user } = useUser();
 
     return (
-        <header className="fixed bg-white top-0 inset-x-0 w-full py-5">
-            <div className="max-w-screen-lg mx-auto lg:px-0 px-10 flex sm:items-center justify-between flex-col sm:flex-row h-full">
-                <div>
+        <header className="w-full my-5">
+            <div className="max-w-screen-lg mx-auto px-10 lg:px-0 flex items-top sm:items-center justify-between flex-row h-full">
+                <div className="min-w-[70px]">
                     <Link href="/">
                         <a className="font-bold">
                             <span className="mr-3">&#x1F5BC;</span>
-                            <span>newheaderdaily</span>
+                            <span className="hidden sm:inline">
+                                newheaderdaily
+                            </span>
+                            <span className="sm:hidden">nhd</span>
                         </a>
                     </Link>
                 </div>
-                <div>
-                    {user ? (
-                        <UserBar user={user} />
-                    ) : (
-                        <TwitterLogin href="/login" />
-                    )}
-                </div>
+                {user ? (
+                    <UserBar user={user} />
+                ) : (
+                    <TwitterLogin href="/login" />
+                )}
             </div>
         </header>
     );
@@ -32,10 +33,10 @@ function Nav(): JSX.Element {
 
 function UserBar({ user }: { user: User }): JSX.Element {
     return (
-        <div>
-            <span className="mr-3">Welcome {user.name}!</span>
+        <div className="text-right">
+            <span className="break-all sm:text-base text-xs leading-6">@{user.username}</span>
             <Link href="/logout">
-                <Anchor>Logout</Anchor>
+                <Anchor className="ml-3">Logout</Anchor>
             </Link>
         </div>
     );

@@ -14,7 +14,7 @@ class MyDocument extends Document {
                     <style type="text/css">{dom.css()}</style>
                     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
                 </Head>
-                <body className="bg-white text-gray-700 font-mono">
+                <body className="bg-stone-100 text-stone-800 font-mono">
                     <Main />
                     <NextScript />
                 </body>

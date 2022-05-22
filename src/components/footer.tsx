@@ -2,7 +2,7 @@ import Anchor from 'components/anchor';
 
 function Footer(): JSX.Element {
     return (
-        <footer className="bottom-0 absolute w-full h-7 flex items-center justify-center">
+        <footer className="mt-10 mb-4 w-full flex items-center justify-center">
             <span className="text-xs">
                 reach out to{' '}
                 <Anchor

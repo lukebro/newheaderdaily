@@ -26,7 +26,13 @@ export default function Dashboard() {
         schedule.status === 'processing' || (hours === 0 && minutes === 0);
 
     return (
-        <section>
+        <section className="prose prose-stone">
+            <h1>
+                {processing
+                    ? 'New header incoming.'
+                    : 'Your header is scheduled.'}
+            </h1>
+
             <ChangeSetting />
 
             {processing ? (
@@ -65,7 +71,9 @@ function CurrentHeader({ header }: { header: Header }) {
 
 function Disabled() {
     return (
-        <section>
+        <section className="prose prose-stone">
+            <h1>I'm turned off.</h1>
+
             <ChangeSetting />
 
             <p>Come back here anytime to re-enable your new header daily.</p>

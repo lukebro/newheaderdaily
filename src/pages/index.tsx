@@ -47,7 +47,7 @@ function Page() {
 
 function HomePage() {
     return (
-        <article className="prose prose-indigo">
+        <article className="prose prose-stone">
             <h1>A new header photo daily.</h1>
 
             <p>
